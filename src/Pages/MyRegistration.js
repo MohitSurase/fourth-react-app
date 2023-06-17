@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 function MyRegistration() {
+  let formRef = useRef();
   let [user, setUser] = useState({
     username: "",
     password: "",
@@ -29,6 +30,12 @@ function MyRegistration() {
   };
 
   let registerAction = async () => {
+    formRef.current.classList.add("was-validated");
+    let formStatus = formRef.current.checkValidity();
+    if (!formStatus) {
+      return;
+    }
+
     //Backend :
     let url = `http://localhost:4000/adduser?username=${user.username}&password=${user.password}&email=${user.email}&mobile=${user.mobile}`;
     await fetch(url);
@@ -40,44 +47,52 @@ function MyRegistration() {
       mobile: "",
     };
     setUser(newUser);
+
+    formRef.current.classList.remove("was-validated");
   };
 
   return (
     <>
-      <input
-        type="text"
-        placeholder="Enter username"
-        className="form-control"
-        value={user.username}
-        onChange={handlerUsernameAction}
-      />
-      <input
-        type="password"
-        placeholder="Enter password"
-        className="form-control"
-        value={user.password}
-        onChange={handlerPasswordAction}
-      />
-      <input
-        type="text"
-        placeholder="Enter email        "
-        className="form-control"
-        value={user.email}
-        onChange={handlerEmailAction}
-      />
-      <input
-        type="text"
-        placeholder="Enter mobile             "
-        className="form-control"
-        value={user.mobile}
-        onChange={handlerMobileAction}
-      />
-      <input
-        type="button"
-        value="Register"
-        className="w-100"
-        onClick={registerAction}
-      />
+      <form ref={formRef} className="needs-validation">
+        <input
+          type="text"
+          placeholder="Enter username"
+          className="form-control"
+          value={user.username}
+          onChange={handlerUsernameAction}
+          required
+        />
+        <input
+          type="password"
+          placeholder="Enter password"
+          className="form-control"
+          value={user.password}
+          onChange={handlerPasswordAction}
+          required
+        />
+        <input
+          type="text"
+          placeholder="Enter email        "
+          className="form-control"
+          value={user.email}
+          onChange={handlerEmailAction}
+          required
+        />
+        <input
+          type="text"
+          placeholder="Enter mobile             "
+          className="form-control"
+          value={user.mobile}
+          onChange={handlerMobileAction}
+          required
+        />
+        <input
+          type="button"
+          value="Register"
+          className="w-100"
+          onClick={registerAction}
+        />
+      </form>
     </>
   );
 }
