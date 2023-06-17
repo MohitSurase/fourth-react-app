@@ -1,54 +1,53 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 
 function App() {
   return (
     <>
-      <h1>My project</h1>
-      <ListDemo />
+      <h1>My Todo</h1>
+      <MyTodo />
     </>
   );
 }
 
-function ListDemo() {
-  let inputRef = useRef();
-  let [List, SetList] = useState(["Hi"]);
+function MyTodo() {
+  let [todo, SetTodo] = useState({ task: "", description: "" });
 
-  let AddMessage = () => {
-    let inputValue = inputRef.current.value;
-    let newList = [...List, inputValue];
-    SetList(newList);
+  let handleChangeTaskAction = (e) => {
+    //console.log(e.target);
+    //e.target == input object
 
-    inputRef.current.value = "";
+    let newTodo = { ...todo, task: e.target.value };
+    SetTodo(newTodo);
+  };
+
+  let handleChangeDescriptionAction = (e) => {
+    let newTodo = { ...todo, description: e.target.value };
+    SetTodo(newTodo);
+  };
+
+  let addTodoAction = () => {
+    alert(todo.task + todo.description);
   };
   return (
     <>
-      <div
-        className="row justify-content-center align-items-center"
-        style={{ height: "100vh" }}
-      >
-        <div className="col-sm-12 col-md-6">
-          <h1>Register App</h1>
-          <input
-            type="text"
-            className="form-control"
-            ref={inputRef}
-            placeholder="Enter User Input"
-          />
-          <input
-            type="text"
-            className="form-control"
-            ref={inputRef}
-            placeholder="Password"
-          />
-          <input
-            type="text"
-            className="form-control"
-            ref={inputRef}
-            placeholder="Email"
-          />
-          <input type="button" value="Login" onClick={AddMessage} />
-        </div>
-      </div>
+      <input
+        type="text"
+        className="form-control"
+        placeholder="Enter Task"
+        value={todo.task}
+        onChange={handleChangeTaskAction}
+      />
+      <textarea
+        name=""
+        className="form-control"
+        id=""
+        cols="30"
+        rows="3"
+        placeholder="Enter Description"
+        value={todo.description}
+        onChange={handleChangeDescriptionAction}
+      ></textarea>
+      <input type="button" value="Add Todo" onClick={addTodoAction} />
     </>
   );
 }
