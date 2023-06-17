@@ -5,6 +5,7 @@ function MyNavigationLinks() {
     <>
       <Link to={"/home"}>Home |</Link>
       <Link to={"/todo"}>Todo |</Link>
+      <Link to={"/todo-list"}>Todo-List |</Link>
       <Link to={"/registration"}>Registration </Link>
     </>
   );
