@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 function MyTodo() {
+  let formRef = useRef();
   let [successBox, setSuccessBox] = useState(false);
   let [todo, SetTodo] = useState({ task: "", description: "" });
 
@@ -18,37 +19,52 @@ function MyTodo() {
   };
 
   let addTodoAction = async () => {
+    formRef.current.classList.add("was-validated");
+    let formStatus = formRef.current.checkValidity();
+    if (!formStatus) {
+      return;
+    }
+
     let url = `http://localhost:4000/addtodo?task=${todo.task}&description=${todo.description}`;
     await fetch(url);
 
     let newTodo = { task: "", description: "" };
     SetTodo(newTodo);
     setSuccessBox(true);
-    setTimeout(() => setSuccessBox(false), 3000);
+    setTimeout(() => {
+      setSuccessBox(false);
+    }, 3000);
+
+    formRef.current.classList.remove("was-validated");
   };
+
   return (
     <>
-      <input
-        type="text"
-        className="form-control"
-        placeholder="Enter Task"
-        value={todo.task}
-        onChange={handleChangeTaskAction}
-      />
-      <textarea
-        name=""
-        className="form-control"
-        id=""
-        cols="30"
-        rows="3"
-        placeholder="Enter Description"
-        value={todo.description}
-        onChange={handleChangeDescriptionAction}
-      ></textarea>
-      <input type="button" value="Add Todo" onClick={addTodoAction} />
-      {successBox && (
-        <div className="alert alert-success">Operation Success</div>
-      )}
+      <form ref={formRef} className="needs-validation">
+        <input
+          type="text"
+          className="form-control"
+          placeholder="Enter Task"
+          value={todo.task}
+          onChange={handleChangeTaskAction}
+          required
+        />
+        <textarea
+          name=""
+          className="form-control"
+          id=""
+          cols="30"
+          rows="3"
+          placeholder="Enter Description"
+          value={todo.description}
+          onChange={handleChangeDescriptionAction}
+          required
+        ></textarea>
+        <input type="button" value="Add Todo" onClick={addTodoAction} />
+        {successBox && (
+          <div className="alert alert-success">Operation Success</div>
+        )}
+      </form>
     </>
   );
 }
