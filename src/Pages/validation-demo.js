@@ -20,6 +20,14 @@ function ValidationDemo() {
           type="text"
           className="form-control"
           placeholder="Enter.."
+          minLength="3"
+          required
+        />
+
+        <input
+          type="text"
+          className="form-control"
+          placeholder="Enter anything"
           required
         />
         <input type="button" value="Submit" onClick={submitAction} />
